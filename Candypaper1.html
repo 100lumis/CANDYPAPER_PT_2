@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+  <meta charset="UTF-8">
+  <title>Kirjaudu</title>
+  <link rel="stylesheet" href="candy1.css">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">  
+  <style>
+    body {
+      background-color: #FFFFFF;
+      background-image: url("makea.png"); 
+      background-size: cover;
+    }
+
+    .fairy {
+      position: absolute;
+      bottom: 360px;
+      left: 850px;
+      width: 120px;
+      cursor: pointer;
+    }
+
+    .basic-box {
+      position: absolute;
+      bottom: 200px;
+      left: 400px;
+      width: 440px;
+      height: 200px;
+      border: 1px solid #000;
+      background-color: #f0f0f0;
+      padding: 10px;
+      color: red;
+	
+    }
+
+    /* Puhekupla */
+    .bubble {
+      display: none;
+      position: absolute;
+      bottom: 440px;  
+      left: 950px;   
+      background: #fff;
+      border: 2px solid #333;
+      border-radius: 12px;
+      padding: 10px;
+      white-space: nowrap;
+    }
+
+	.login {
+	
+	position: absolute;
+      bottom: 55px;
+      left: 110px;
+	}
+  </style>
+</head>
+<body>
+  <div class="basic-box">
+    <div class="login">
+      <h2>Kirjaudu</h2>
+      <form id="login">
+        <label for="user">Käyttäjänimi</label>
+        <input type="text" name="user" required>
+        <div class="input-group">
+          <label for="psw">Salasana</label>
+          <input type="password" name="psw" required>
+        </div>
+        <button type="submit">Kirjaudu</button>
+      </form>
+	 
+    </div>
+  </div>
+
+  <div>
+    <img src="fairy1.png" alt="keiju" class="fairy">
+    <div class="bubble">Tiesitkö sen, että Hershey suklaapatukka on <br>käynnyt avaruudessa? <br>Sitä vietiin Apollo 15 mukana kuuhun <br>vuonna 1971.</div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+ 
+  <script>
+    function bounce() {
+      $(".fairy")
+        .animate({ top: "-=20px" }, 800) 
+        .animate({ top: "+=20px" }, 800, bounce); 
+    }
+
+    $(document).ready(function(){
+      bounce();
+
+      $(".fairy").on("click", function(){
+        $(".bubble").fadeToggle(300);
+      });
+    });
+  </script>
+   <script src="candy1.js"></script>
+  <!-- firebase -->
+  <script type="module" src="fb-auth.js"></script>
+</body>
+</html>
