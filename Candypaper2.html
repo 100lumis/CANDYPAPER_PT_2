@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="Candy1.css">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">  
+  <style>
+    body {
+      background-color: #FFFFFF;
+      background-image: url("candyland.png");
+      background-size: cover;
+      margin: 0;
+    }
+
+    .button-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 17px;
+      padding-top: 175px;
+    }
+
+    .styled {
+      border: 0;
+      line-height: 2.5;
+      padding: 0 20px;
+      font-size: 1rem;
+	  font-family: Rockwell Bold; 
+      text-align: center;
+      color: white;
+      text-shadow: 1px 1px 1px black;
+      border-radius: 10px;
+      background-image: linear-gradient(
+        to top left,
+        rgb(255, 20, 147),
+        rgb(255, 20, 147) 30%,
+        transparent
+      );
+      box-shadow:
+        inset 2px 2px 3px rgb(255 255 255 / 0.6),
+        inset -2px -2px 3px rgb(0 0 0 / 0.6);
+      cursor: pointer;
+    }
+
+    .styled:hover {
+      background-color: salmon;
+    }
+
+    .styled:active {
+      box-shadow:
+        inset -2px -2px 3px rgb(255 255 255 / 0.6),
+        inset 2px 2px 3px rgb(0 0 0 / 0.6);
+    }
+
+    /* Asetuslaatikon tyyli */
+	
+    .settings-box {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: white;
+      border: 2px solid #888;
+      padding: 20px;
+      z-index: 10;
+      width: 300px;
+      border-radius: 15px;
+      box-shadow:
+        inset 2px 2px 3px rgb(255 255 255 / 0.6),
+        inset -2px -2px 3px rgb(0 0 0 / 0.6);
+    }
+
+    .settings-box h2 {
+      margin-top: 0;
+	  font-family: Rockwell Bold; 
+    }
+
+    .close-btn {
+      float: right;
+      font-size: 20px;
+      font-weight: bold;
+      color: #888;
+      cursor: pointer;
+	 
+    }
+
+    .close-btn:hover {
+      color: black;
+    }
+
+    /* Taustahimmennys */
+    .overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(0, 0, 0, 0.4);
+      z-index: 5;
+    }
+
+    /* Play/Pause nappi */
+    #audioControlBtn {
+      margin-top: 15px;
+      padding: 10px 20px;
+      font-size: 1rem;
+      cursor: pointer;
+      border-radius: 10px;
+      border: none;
+      background-color: #ff1493;
+      color: white;
+      box-shadow:
+        inset 2px 2px 3px rgb(255 255 255 / 0.6),
+        inset -2px -2px 3px rgb(0 0 0 / 0.6);
+		font-family: Rockwell Bold; 
+    }
+
+    #audioControlBtn:hover {
+      background-color: salmon;
+    }
+	 
+	
+  </style>
+ 
+
+</head>
+<body>
+
+<div class="button-container">
+  <button class="favorite styled" type="button" onclick="window.location.href='Candypaper3.index'">Helppo</button>
+  <button class="favorite styled" type="button" onclick="window.location.href='Candypaper3medium.index'">Keskitaso</button>
+  <button class="favorite styled" type="button" onclick="window.location.href='Candypaper3hard.index'">Vaikea</button>
+  <button class="favorite styled" type="button" onclick="openSettings()">Asetukset</button>
+</div>
+
+<!-- Taustahimmennys -->
+<div class="overlay" id="overlay" onclick="closeSettings()"></div>
+
+<!-- Asetukset-laatikko -->
+<div class="settings-box" id="settingsBox">
+  <span class="close-btn" onclick="closeSettings()">&times;</span>
+  <h2>Asetukset</h2>
+
+  <audio id="backgroundAudio" src="lofi.mp3" preload="auto"></audio>
+  <button id="audioControlBtn" onclick="toggleAudio()">Soita musiikki</button>
+<button id="audioControlBtn" type="button" onclick="window.location.href='Candypaper4.index'">Palaute</button>
+  <!-- Voit lisätä tänne esim. checkboxeja, dropdown-valikkoja jne. -->
+</div>
+
+<script>
+  function openSettings() {
+    document.getElementById("settingsBox").style.display = "block";
+    document.getElementById("overlay").style.display = "block";
+  }
+
+  function closeSettings() {
+    document.getElementById("settingsBox").style.display = "none";
+    document.getElementById("overlay").style.display = "none";
+  }
+
+  const audio = document.getElementById("backgroundAudio");
+  const audioBtn = document.getElementById("audioControlBtn");
+
+  function toggleAudio() {
+    if (audio.paused) {
+      audio.play();
+      audioBtn.textContent = "Pysäytä musiikki";
+    } else {
+      audio.pause();
+      audioBtn.textContent = "Soita musiikki";
+    }
+  }
+</script>
+ 
+</body>
+</html>
