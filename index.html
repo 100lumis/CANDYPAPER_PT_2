@@ -29,10 +29,8 @@
       background-color: #f0f0f0;
       padding: 10px;
       color: red;
-	
     }
 
-    /* Puhekupla */
     .bubble {
       display: none;
       position: absolute;
@@ -45,38 +43,42 @@
       white-space: nowrap;
     }
 
-	.login {
-	
-	position: absolute;
+    .login {
+      position: absolute;
       bottom: 55px;
       left: 110px;
-	}
+    }
   </style>
 </head>
 <body>
   <div class="basic-box">
     <div class="login">
       <h2>Kirjaudu</h2>
-		<form id="loginForm">
-        <label for="user">Käyttäjänimi</label>
-			<input type="text" id="username" name="user" required>
-			<div class="input-group">
-          <label for="psw">Salasana</label>
-				<input type="text" id="username" name="user" required>
-			</div>
+      <form id="loginForm">
+        <label for="username">Käyttäjänimi</label>
+        <input type="text" id="username" name="user" required>
+
+        <div class="input-group">
+          <label for="password">Salasana</label>
+          <input type="password" id="password" name="psw" required>
+        </div>
+
         <button type="submit">Kirjaudu</button>
       </form>
-	 
     </div>
   </div>
 
   <div>
     <img src="fairy1.png" alt="keiju" class="fairy">
-    <div class="bubble">Tiesitkö sen, että Hershey suklaapatukka on <br>käynnyt avaruudessa? <br>Sitä vietiin Apollo 15 mukana kuuhun <br>vuonna 1971.</div>
+    <div class="bubble">
+      Tiesitkö sen, että Hershey suklaapatukka on <br>
+      käynyt avaruudessa? <br>
+      Sitä vietiin Apollo 15 mukana kuuhun <br>
+      vuonna 1971.
+    </div>
   </div>
 
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
- 
   <script>
     function bounce() {
       $(".fairy")
@@ -86,13 +88,13 @@
 
     $(document).ready(function(){
       bounce();
-
       $(".fairy").on("click", function(){
         $(".bubble").fadeToggle(300);
       });
     });
   </script>
-  <!-- firebase -->
+
+  <!-- Firebase authentication/login script -->
   <script type="module" src="fb-auth.js"></script>
 </body>
 </html>
