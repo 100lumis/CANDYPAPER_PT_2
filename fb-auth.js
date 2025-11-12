@@ -1,17 +1,17 @@
-
-// localhost check....
+// localhost check
 const isLocal = location.hostname === "localhost" || location.protocol === "file:";
 
 // firebase
 let auth = null;
 let db = null;
+let firebaseReady = false;
 
 if (!isLocal) {
   // fb import
   import("https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js")
     .then(async ({ initializeApp }) => {
-      const { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } = await import("https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js");
-      const { getFirestore, doc, setDoc, getDoc, enableIndexedDbPersistence } = await import("https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js");
+      const { getAuth } = await import("https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js");
+      const { getFirestore, enableIndexedDbPersistence } = await import("https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js");
 
       // Firebase config
       const firebaseConfig = {
@@ -30,9 +30,12 @@ if (!isLocal) {
       enableIndexedDbPersistence(db).catch((err) => {
         console.warn("Offline persistence not available:", err.code);
       });
+
+      firebaseReady = true;
+      console.log("Firebase initialized ✅");
     });
 } else {
-  console.log("Käytössä paikallisesti.");
+  console.log("🧩 Käytössä paikallisesti.");
 }
 
 async function saveUserData(userId, data) {
@@ -67,12 +70,17 @@ if (loginForm) {
   loginForm.addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    const username = document.getElementById("username").value;
-    const password = document.getElementById("password").value;
+    const username = document.getElementById("username").value.trim();
+    const password = document.getElementById("password").value.trim();
+    if (!username || !password) {
+      alert("Syötä käyttäjänimi ja salasana.");
+      return;
+    }
+
     const fakeEmail = username + "@mygame.com";
 
+    // LOCAL MODE
     if (isLocal) {
-      // local setup
       const key = "userAuth_" + username;
       let user = JSON.parse(localStorage.getItem(key));
 
@@ -87,10 +95,10 @@ if (loginForm) {
         return;
       }
 
-      let userData = loadUserData(user.userId);
+      let userData = await loadUserData(user.userId);
       if (!userData) {
         userData = { username, score: 0 };
-        saveUserData(user.userId, userData);
+        await saveUserData(user.userId, userData);
       }
 
       alert("Kirjautuminen onnistui (local)!");
@@ -98,9 +106,14 @@ if (loginForm) {
       return;
     }
 
-    // firebase setup
+    // --- FIREBASE MODE ---
+    if (!firebaseReady) {
+      alert("Firebase ei ole vielä valmis, yritä hetken päästä uudelleen.");
+      return;
+    }
+
     try {
-      const { signInWithEmailAndPassword, createUserWithEmailAndPassword } = await import("https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js");
+      const { signInWithEmailAndPassword } = await import("https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js");
       const userCredential = await signInWithEmailAndPassword(auth, fakeEmail, password);
       const user = userCredential.user;
       console.log("Kirjautunut:", user.uid);
@@ -131,6 +144,7 @@ if (loginForm) {
   });
 }
 
-// testailua varten
+// network events
 window.addEventListener("online", () => console.log("🔁 Online"));
 window.addEventListener("offline", () => console.log("📴 Offline"));
+
