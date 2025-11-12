@@ -94,13 +94,21 @@
     });
   </script>
 
-  <!-- Firebase authentication/login script -->
-<!-- Firebase compat scripts -->
-<script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore-compat.js"></script>
+  <!-- Firebase compat scripts -->
+  <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore-compat.js"></script>
 
-<!-- Your login script -->
-<script src="fb-auth.js"></script>
+  <!-- Conditional loading of fb-auth.js -->
+  <script>
+    const isLocal = location.protocol === "file:";
+    const script = document.createElement("script");
+    script.src = isLocal
+      ? "fb-auth.js" // local file in same folder
+      : "https://100lumis.github.io/CANDYPAPER_PT_2/fb-auth.js"; // GitHub Pages hosted
+    document.head.appendChild(script);
+  </script>
+
 </body>
 </html>
+
