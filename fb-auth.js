@@ -112,7 +112,7 @@ if (loginForm) {
       }
 
       alert("Kirjautuminen onnistui!");
-      window.location.href = "candy2.html";
+      window.location.href = "Candypaper2.html";
     } catch (error) {
       try {
         const { createUserWithEmailAndPassword } = await import("https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js");
@@ -122,7 +122,7 @@ if (loginForm) {
         await saveUserData(user.uid, userData);
 
         alert("Uusi käyttäjä luotu ja kirjautunut!");
-        window.location.href = "candy2.html";
+        window.location.href = "Candypaper2.html";
       } catch (error) {
         console.error("Login/Register failed:", error);
         alert("Virhe: " + error.message);
