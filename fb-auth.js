@@ -1,49 +1,36 @@
-// localhost check
-const isLocal = location.hostname === "localhost" || location.protocol === "file:";
+<script>
+// --- Local / Firebase check ---
+const isLocal = location.protocol === "file:";
 
-// firebase
 let auth = null;
 let db = null;
-let firebaseReady = false;
 
 if (!isLocal) {
-  // fb import
-  import("https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js")
-    .then(async ({ initializeApp }) => {
-      const { getAuth } = await import("https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js");
-      const { getFirestore, enableIndexedDbPersistence } = await import("https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js");
+  // Firebase config
+  const firebaseConfig = {
+    apiKey: "AIzaSyBH9Eb9mRWeSx4ySuyasPf0cQ0I0JZdm2s",
+    authDomain: "candypaperdb-69758.firebaseapp.com",
+    projectId: "candypaperdb-69758",
+    storageBucket: "candypaperdb-69758.appspot.com",
+    messagingSenderId: "805331025403",
+    appId: "1:805331025403:web:6bf883ad174a1886f49f5e"
+  };
 
-      // Firebase config
-      const firebaseConfig = {
-        apiKey: "AIzaSyBH9Eb9mRWeSx4ySuyasPf0cQ0I0JZdm2s",
-        authDomain: "candypaperdb-69758.firebaseapp.com",
-        projectId: "candypaperdb-69758",
-        storageBucket: "candypaperdb-69758.appspot.com",
-        messagingSenderId: "805331025403",
-        appId: "1:805331025403:web:6bf883ad174a1886f49f5e"
-      };
+  firebase.initializeApp(firebaseConfig);
+  auth = firebase.auth();
+  db = firebase.firestore();
 
-      const app = initializeApp(firebaseConfig);
-      auth = getAuth(app);
-      db = getFirestore(app);
-
-      enableIndexedDbPersistence(db).catch((err) => {
-        console.warn("Offline persistence not available:", err.code);
-      });
-
-      firebaseReady = true;
-      console.log("Firebase initialized ✅");
-    });
+  console.log("Firebase initialized ✅");
 } else {
-  console.log("🧩 Käytössä paikallisesti.");
+  console.log("🧩 Running locally");
 }
 
+// --- LocalStorage backup functions ---
 async function saveUserData(userId, data) {
   localStorage.setItem("playerData_" + userId, JSON.stringify(data));
 
   if (!isLocal && db) {
-    const { doc, setDoc } = await import("https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js");
-    await setDoc(doc(db, "players", userId), data, { merge: true });
+    await db.collection("players").doc(userId).set(data, { merge: true });
   }
 }
 
@@ -54,24 +41,33 @@ async function loadUserData(userId) {
     return localBackup ? JSON.parse(localBackup) : null;
   }
 
-  const { doc, getDoc } = await import("https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js");
   try {
-    const snap = await getDoc(doc(db, "players", userId));
-    if (snap.exists()) return snap.data();
+    const doc = await db.collection("players").doc(userId).get();
+    if (doc.exists) return doc.data();
   } catch {
     console.warn("Could not fetch from Firebase, using local data");
   }
+
   return localBackup ? JSON.parse(localBackup) : null;
 }
 
-// --- Auth / login logic ---
+// --- Login / Register logic ---
 const loginForm = document.getElementById("loginForm");
 if (loginForm) {
-  loginForm.addEventListener("submit", async (e) => {
+  loginForm.addEventListener("submit", async function(e) {
     e.preventDefault();
 
-    const username = document.getElementById("username").value.trim();
-    const password = document.getElementById("password").value.trim();
+    const usernameInput = document.getElementById("username");
+    const passwordInput = document.getElementById("password");
+
+    if (!usernameInput || !passwordInput) {
+      alert("Form inputs not found");
+      return;
+    }
+
+    const username = usernameInput.value.trim();
+    const password = passwordInput.value.trim();
+
     if (!username || !password) {
       alert("Syötä käyttäjänimi ja salasana.");
       return;
@@ -79,17 +75,17 @@ if (loginForm) {
 
     const fakeEmail = username + "@mygame.com";
 
-    // LOCAL MODE
+    // --- LOCAL MODE ---
     if (isLocal) {
       const key = "userAuth_" + username;
       let user = JSON.parse(localStorage.getItem(key));
 
       if (user && user.password === password) {
-        console.log("Kirjautunut (local):", user.userId);
+        console.log("Logged in locally:", user.userId);
       } else if (!user) {
         user = { userId: "user_" + Math.random().toString(36).slice(2), username, password };
         localStorage.setItem(key, JSON.stringify(user));
-        console.log("Uusi käyttäjä luotu (local):", user.userId);
+        console.log("New local user created:", user.userId);
       } else {
         alert("Virheellinen salasana");
         return;
@@ -107,16 +103,15 @@ if (loginForm) {
     }
 
     // --- FIREBASE MODE ---
-    if (!firebaseReady) {
-      alert("Firebase ei ole vielä valmis, yritä hetken päästä uudelleen.");
+    if (!auth) {
+      alert("Firebase ei ole vielä valmis.");
       return;
     }
 
     try {
-      const { signInWithEmailAndPassword } = await import("https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js");
-      const userCredential = await signInWithEmailAndPassword(auth, fakeEmail, password);
+      const userCredential = await auth.signInWithEmailAndPassword(fakeEmail, password);
       const user = userCredential.user;
-      console.log("Kirjautunut:", user.uid);
+      console.log("Logged in:", user.uid);
 
       let userData = await loadUserData(user.uid);
       if (!userData) {
@@ -128,23 +123,25 @@ if (loginForm) {
       window.location.href = "Candypaper2.html";
     } catch (error) {
       try {
-        const { createUserWithEmailAndPassword } = await import("https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js");
-        const userCredential = await createUserWithEmailAndPassword(auth, fakeEmail, password);
+        const userCredential = await auth.createUserWithEmailAndPassword(fakeEmail, password);
         const user = userCredential.user;
+
         const userData = { username, score: 0 };
         await saveUserData(user.uid, userData);
 
         alert("Uusi käyttäjä luotu ja kirjautunut!");
         window.location.href = "Candypaper2.html";
-      } catch (error) {
-        console.error("Login/Register failed:", error);
-        alert("Virhe: " + error.message);
+      } catch (regError) {
+        console.error("Login/Register failed:", regError);
+        alert("Virhe: " + regError.message);
       }
     }
   });
 }
 
-// network events
+// --- Network events ---
 window.addEventListener("online", () => console.log("🔁 Online"));
 window.addEventListener("offline", () => console.log("📴 Offline"));
+</script>
+
 
