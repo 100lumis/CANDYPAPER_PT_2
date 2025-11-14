@@ -147,7 +147,7 @@ window.addEventListener("load", async () => {
 function updateLeaderboardUI() {
   const tbody = document.getElementById("leaderboardBody");
   tbody.innerHTML = "";
-  leaderboard.sort((a,b) => b.score!==a.score ? b.score-b.score : a.time-b.time);
+  leaderboard.sort((a,b) => b.score !== a.score ? b.score - a.score : a.time - b.time);
   if(leaderboard.length > 10) leaderboard = leaderboard.slice(0,10);
   leaderboard.forEach(entry => {
     const tr = document.createElement("tr");
@@ -166,9 +166,8 @@ function clearLeaderboard() {
   }
 }
 
-// Save high score to Firebase if logged in
 async function saveHighScore(score, time) {
-  if(typeof auth === "undefined" || !auth.currentUser) return; // skip if not logged in
+  if(typeof auth === "undefined" || !auth.currentUser) return;
   const user = auth.currentUser;
   try {
     await db.collection("highScores").doc(user.uid).set({
@@ -183,18 +182,18 @@ async function saveHighScore(score, time) {
   }
 }
 
-// Game logic
 document.addEventListener("DOMContentLoaded", () => candyCrushGame());
 
 function candyCrushGame() {
   const grid = document.querySelector(".grid");
   const scoreDisplay = document.getElementById("score");
+  const movesDisplay = document.getElementById("moves");
   const width = 8;
   const squares = [];
   let score = 0;
   let movesLeft = 40;
-  const movesDisplay = document.getElementById("moves");
   let potentialMatch = false;
+  let hasWon = false;
 
   const candyColors = [
     "url(https://raw.githubusercontent.com/arpit456jain/Amazing-Js-Projects/master/Candy%20Crush/utils/red-candy.png)",
@@ -205,7 +204,6 @@ function candyCrushGame() {
     "url(https://raw.githubusercontent.com/arpit456jain/Amazing-Js-Projects/master/Candy%20Crush/utils/purple-candy.png)"
   ];
 
-  // Create board
   for(let i=0;i<width*width;i++){
     const square = document.createElement("div");
     square.setAttribute("draggable",true);
@@ -225,8 +223,17 @@ function candyCrushGame() {
     sq.addEventListener("drop", dragDrop);
   });
 
-  function dragStart(){ colorBeingDragged=this.style.backgroundImage; squareIdBeingDragged=parseInt(this.id); }
-  function dragDrop(){ colorBeingReplaced=this.style.backgroundImage; squareIdBeingReplaced=parseInt(this.id); this.style.backgroundImage=colorBeingDragged; squares[squareIdBeingDragged].style.backgroundImage=colorBeingReplaced; }
+  function dragStart(){ 
+    colorBeingDragged=this.style.backgroundImage; 
+    squareIdBeingDragged=parseInt(this.id); 
+  }
+
+  function dragDrop(){ 
+    colorBeingReplaced=this.style.backgroundImage; 
+    squareIdBeingReplaced=parseInt(this.id); 
+    this.style.backgroundImage=colorBeingDragged; 
+    squares[squareIdBeingDragged].style.backgroundImage=colorBeingReplaced; 
+  }
 
   function dragEnd(){
     const validMoves=[squareIdBeingDragged-1,squareIdBeingDragged-width,squareIdBeingDragged+1,squareIdBeingDragged+width];
@@ -238,9 +245,17 @@ function candyCrushGame() {
         squares[squareIdBeingDragged].style.backgroundImage=colorBeingDragged;
       } else {
         movesLeft--;
+        if(movesLeft < 0) movesLeft = 0;
         movesDisplay.innerHTML=movesLeft;
-        if(score>=150){ alert("Voitit pelin! 🎉"); movesLeft=0; }
-        else if(movesLeft<=0){ alert("Peli loppui! Yritä uudelleen."); }
+
+        if(score>=150 && !hasWon){
+          hasWon = true;
+          alert("Voitit pelin! 🎉");
+        }
+
+        if(movesLeft <= 0 && !hasWon){
+          alert("Peli loppui! Yritä uudelleen.");
+        }
       }
       squareIdBeingReplaced=null;
     } else if(squareIdBeingReplaced && !validMove){
@@ -276,7 +291,11 @@ function candyCrushGame() {
       }
       if(matchCount>=3){
         if(testOnly) potentialMatch=true;
-        else { for(let k=0;k<matchCount;k++) squares[i+k].style.backgroundImage=""; score+=matchCount; updateScore(); }
+        else { 
+          for(let k=0;k<matchCount;k++) squares[i+k].style.backgroundImage=""; 
+          score+=matchCount; 
+          updateScore(); 
+        }
         i+=matchCount-1;
       }
     }
@@ -292,7 +311,11 @@ function candyCrushGame() {
       }
       if(matchCount>=3){
         if(testOnly) potentialMatch=true;
-        else { for(let k=0;k<matchCount;k++) squares[i+k*width].style.backgroundImage=""; score+=matchCount; updateScore(); }
+        else { 
+          for(let k=0;k<matchCount;k++) squares[i+k*width].style.backgroundImage=""; 
+          score+=matchCount; 
+          updateScore(); 
+        }
       }
     }
   }
@@ -312,3 +335,5 @@ function candyCrushGame() {
 </script>
 </body>
 </html>
+
+
