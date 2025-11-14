@@ -131,7 +131,20 @@
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
+  <script>
+const firebaseConfig = {
+   apiKey: "AIzaSyBH9Eb9mRWeSx4ySuyasPf0cQ0I0JZdm2s",
+    authDomain: "candypaperdb-69758.firebaseapp.com",
+    projectId: "candypaperdb-69758",
+    storageBucket: "candypaperdb-69758.appspot.com",
+    messagingSenderId: "805331025403",
+    appId: "1:805331025403:web:6bf883ad174a1886f49f5e"
+};
 
+firebase.initializeApp(firebaseConfig);
+auth = firebase.auth();
+db = firebase.firestore();
+</script>
 <!-- Firebase Auth -->
 <script src="fb-auth.js"></script>
 
@@ -176,7 +189,7 @@ async function saveHighScore(score, time) {
   if(typeof auth === "undefined" || !auth.currentUser) return;
   const user = auth.currentUser;
   try {
-    await db.collection("highScores").doc(user.uid).set({
+    await db.collection("scores").doc(user.uid).set({
       name: playerName,
       score,
       time,
@@ -341,6 +354,7 @@ function candyCrushGame() {
 </script>
 </body>
 </html>
+
 
 
 
