@@ -78,4 +78,49 @@
       projectId: "candypaperdb-69758",
       storageBucket: "candypaperdb-69758.appspot.com",
       messagingSenderId: "805331025403",
-      appId: "1:8053310
+      appId: "1:805331025403:web:XXXXXXXXXXXXX"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    // Fetch leaderboard from Firestore
+    async function fetchLeaderboard() {
+      const tbody = document.getElementById("leaderboardBody");
+      tbody.innerHTML = "<tr><td colspan='3'>Loading...</td></tr>";
+
+      try {
+        const snapshot = await db.collection("highScores")
+                                 .orderBy("score", "desc")
+                                 .orderBy("time", "asc")
+                                 .limit(10)
+                                 .get();
+
+        tbody.innerHTML = ""; // clear loading
+        snapshot.forEach(doc => {
+          const data = doc.data();
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${data.name || 'Unknown'}</td>
+            <td>${data.score || 0}</td>
+            <td>${data.time || '-'}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+
+        if (snapshot.empty) {
+          tbody.innerHTML = "<tr><td colspan='3'>No scores yet</td></tr>";
+        }
+      } catch (err) {
+        tbody.innerHTML = "<tr><td colspan='3'>Error loading scores</td></tr>";
+        console.error(err);
+      }
+    }
+
+    // Refresh button
+    document.getElementById("refreshButton").addEventListener("click", fetchLeaderboard);
+    window.addEventListener("load", fetchLeaderboard);
+  </script>
+</body>
+</html>
