@@ -71,17 +71,17 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
 
   <script>
-    // 🔑 Replace with your Firebase config
-    const firebaseConfig = {
-      apiKey: "YOUR_API_KEY",
-      authDomain: "YOUR_AUTH_DOMAIN",
-      projectId: "YOUR_PROJECT_ID",
-      storageBucket: "YOUR_STORAGE_BUCKET",
-      messagingSenderId: "YOUR_MSG_ID",
-      appId: "YOUR_APP_ID"
+    // fbconfig
+  const firebaseConfig = {
+  apiKey: "AIzaSyBH9Eb9mRWeSx4ySuyasPf0cQ0I0JZdm2s",
+  authDomain: "candypaperdb-69758.firebaseapp.com",
+  projectId: "candypaperdb-69758",
+  storageBucket: "candypaperdb-69758.appspot.com",
+  messagingSenderId: "805331025403",
+  appId: "1:805331025403:web:6bf883ad174a1886f49f5e"
     };
 
-    // Initialize Firebase
+    // fb init
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
@@ -121,7 +121,7 @@
 
     document.getElementById("refreshButton").addEventListener("click", fetchLeaderboard);
 
-    // Auto-load leaderboard on page load
+    // Auto-load
     fetchLeaderboard();
   </script>
 </body>
