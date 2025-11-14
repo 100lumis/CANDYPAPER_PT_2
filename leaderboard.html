@@ -82,47 +82,45 @@
     };
 
     // fb init
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
+   
+  const app = firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
 
-    async function fetchLeaderboard() {
-      const tbody = document.getElementById("leaderboardBody");
-      tbody.innerHTML = "<tr><td colspan='3'>Loading...</td></tr>";
+  async function fetchLeaderboard() {
+    const tbody = document.getElementById("leaderboardBody");
+    tbody.innerHTML = "<tr><td colspan='3'>Loading...</td></tr>";
 
-      try {
-        const snapshot = await db.collection("highscores")
-                                 .orderBy("score", "desc")
-                                 .orderBy("time", "asc")
-                                 .limit(50)
-                                 .get();
+    try {
+      const snapshot = await db.collection("highscores")
+                               .orderBy("score", "desc")
+                               .limit(50)
+                               .get();
 
-        if (snapshot.empty) {
-          tbody.innerHTML = "<tr><td colspan='3'>No scores yet</td></tr>";
-          return;
-        }
-
-        tbody.innerHTML = "";
-        let index = 0;
-        snapshot.forEach(doc => {
-          const data = doc.data();
-          const tr = document.createElement("tr");
-          tr.innerHTML = `<td>${data.name}</td><td>${data.score}</td><td>${data.time}</td>`;
-          // Highlight top scorer
-          if(index === 0) tr.classList.add("highlight");
-          tbody.appendChild(tr);
-          index++;
-        });
-
-      } catch (err) {
-        tbody.innerHTML = `<tr><td colspan='3'>Error loading leaderboard: ${err.message}</td></tr>`;
-        console.error(err);
+      if (snapshot.empty) {
+        tbody.innerHTML = "<tr><td colspan='3'>No scores yet</td></tr>";
+        return;
       }
+
+      tbody.innerHTML = "";
+      snapshot.forEach(doc => {
+        const data = doc.data();
+        const tr = document.createElement("tr");
+        const player = data.username || "Unknown";
+        const score = data.score || 0;
+        const time = data.time !== undefined ? data.time : "–"; // show dash if no time field
+        tr.innerHTML = `<td>${player}</td><td>${score}</td><td>${time}</td>`;
+        tbody.appendChild(tr);
+      });
+    } catch (err) {
+      console.error("Error fetching leaderboard:", err);
+      tbody.innerHTML = "<tr><td colspan='3'>Failed to load scores</td></tr>";
     }
+  }
 
-    document.getElementById("refreshButton").addEventListener("click", fetchLeaderboard);
+  document.getElementById("refreshButton").addEventListener("click", fetchLeaderboard);
 
-    // Auto-load
-    fetchLeaderboard();
+  // Auto-load leaderboard on page load
+  fetchLeaderboard();
   </script>
 </body>
 </html>
