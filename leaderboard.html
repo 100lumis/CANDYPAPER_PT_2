@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Global Leaderboard</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #fdf6e3;
+      color: #333;
+      text-align: center;
+      padding: 20px;
+    }
+    h1 {
+      margin-bottom: 20px;
+    }
+    table {
+      margin: 0 auto;
+      border-collapse: collapse;
+      width: 80%;
+      max-width: 600px;
+    }
+    th, td {
+      border: 1px solid #aaa;
+      padding: 10px;
+      text-align: center;
+    }
+    th {
+      background-color: #ffb347;
+      color: white;
+    }
+    tr:nth-child(even) {
+      background-color: #fff2e6;
+    }
+    tr.highlight {
+      background-color: #ffd700 !important;
+    }
+    #refreshButton {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #ffb347;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    #refreshButton:hover {
+      background-color: #ffa500;
+    }
+  </style>
+</head>
+<body>
+  <h1>Global High Scores</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>Player</th>
+        <th>Score</th>
+        <th>Time (s)</th>
+      </tr>
+    </thead>
+    <tbody id="leaderboardBody">
+      <tr><td colspan="3">Loading...</td></tr>
+    </tbody>
+  </table>
+  <button id="refreshButton">Refresh</button>
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_AUTH_DOMAIN",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_STORAGE_BUCKET",
+      messagingSenderId: "YOUR_MSG_ID",
+      appId: "YOUR_APP_ID"
+    };
+
+    const app = firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    async function fetchLeaderboard() {
+      const tbody = document.getElementById("leaderboardBody");
+      tbody.innerHTML = "<tr><td colspan='3'>Loading...</td></tr>";
+
+      const snapshot = await db.collection("highscores")
+                               .orderBy("score", "desc")
+                               .orderBy("time", "asc")
+                               .limit(50)
+                               .get();
+
+      if(snapshot.empty){
+        tbody.innerHTML = "<tr><td colspan='3'>No scores yet</td></tr>";
+        return;
+      }
+
+      tbody.innerHTML = "";
+      snapshot.forEach(doc => {
+        const data = doc.data();
+        const tr = document.createElement("tr");
+        tr.innerHTML = `<td>${data.name}</td><td>${data.score}</td><td>${data.time}</td>`;
+        tbody.appendChild(tr);
+      });
+    }
+
+    document.getElementById("refreshButton").addEventListener("click", fetchLeaderboard);
+
+    // Auto-load leaderboard on page load
+    fetchLeaderboard();
+  </script>
+</body>
+</html>
