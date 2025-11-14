@@ -71,56 +71,11 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
 
   <script>
-    // fbconfig
-  const firebaseConfig = {
-  apiKey: "AIzaSyBH9Eb9mRWeSx4ySuyasPf0cQ0I0JZdm2s",
-  authDomain: "candypaperdb-69758.firebaseapp.com",
-  projectId: "candypaperdb-69758",
-  storageBucket: "candypaperdb-69758.appspot.com",
-  messagingSenderId: "805331025403",
-  appId: "1:805331025403:web:6bf883ad174a1886f49f5e"
-    };
-
-    // fb init
-   
-  const app = firebase.initializeApp(firebaseConfig);
-  const db = firebase.firestore();
-
-  async function fetchLeaderboard() {
-    const tbody = document.getElementById("leaderboardBody");
-    tbody.innerHTML = "<tr><td colspan='3'>Loading...</td></tr>";
-
-    try {
-      const snapshot = await db.collection("highscores")
-                               .orderBy("score", "desc")
-                               .limit(50)
-                               .get();
-
-      if (snapshot.empty) {
-        tbody.innerHTML = "<tr><td colspan='3'>No scores yet</td></tr>";
-        return;
-      }
-
-      tbody.innerHTML = "";
-      snapshot.forEach(doc => {
-        const data = doc.data();
-        const tr = document.createElement("tr");
-        const player = data.username || "Unknown";
-        const score = data.score || 0;
-        const time = data.time !== undefined ? data.time : "–"; // show dash if no time field
-        tr.innerHTML = `<td>${player}</td><td>${score}</td><td>${time}</td>`;
-        tbody.appendChild(tr);
-      });
-    } catch (err) {
-      console.error("Error fetching leaderboard:", err);
-      tbody.innerHTML = "<tr><td colspan='3'>Failed to load scores</td></tr>";
-    }
-  }
-
-  document.getElementById("refreshButton").addEventListener("click", fetchLeaderboard);
-
-  // Auto-load leaderboard on page load
-  fetchLeaderboard();
-  </script>
-</body>
-</html>
+    // --- Firebase config ---
+    const firebaseConfig = {
+      apiKey: "AIzaSyBH9Eb9mRWeSx4ySuyasPf0cQ0I0JZdm2s",
+      authDomain: "candypaperdb-69758.firebaseapp.com",
+      projectId: "candypaperdb-69758",
+      storageBucket: "candypaperdb-69758.appspot.com",
+      messagingSenderId: "805331025403",
+      appId: "1:8053310
