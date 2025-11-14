@@ -1,8 +1,10 @@
-
+// Detect local offline mode
 const isLocal = window.location.protocol === "file:";
 
-let auth, db;
+let auth = null;
+let db = null;
 
+// Only load Firebase when not local
 if (!isLocal) {
   const firebaseConfig = {
     apiKey: "AIzaSyBH9Eb9mRWeSx4ySuyasPf0cQ0I0JZdm2s",
@@ -13,13 +15,12 @@ if (!isLocal) {
     appId: "1:805331025403:web:6bf883ad174a1886f49f5e"
   };
 
-  // Initialize Firebase
   firebase.initializeApp(firebaseConfig);
   auth = firebase.auth();
   db = firebase.firestore();
 }
 
-// save n load
+// ------- SAVE & LOAD (shared for all pages) -------
 async function saveUserData(userId, data) {
   localStorage.setItem("playerData_" + userId, JSON.stringify(data));
 
@@ -47,39 +48,44 @@ async function loadUserData(userId) {
   return localBackup ? JSON.parse(localBackup) : null;
 }
 
-// --- Login Form ---
-document.getElementById("loginForm").addEventListener("submit", async (e) => {
-  e.preventDefault();
+// ------- LOGIN FORM HANDLER (only runs on login page) -------
+const loginForm = document.getElementById("loginForm");
 
-  const username = document.getElementById("username").value.trim();
-  const password = document.getElementById("password").value.trim();
+if (loginForm) {
+  loginForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
 
-  if (!username || !password) return alert("Syötä käyttäjänimi ja salasana.");
+    const username = document.getElementById("username").value.trim();
+    const password = document.getElementById("password").value.trim();
 
-  if (isLocal) {
-    // LOCAL LOGIN
-    let users = JSON.parse(localStorage.getItem("localUsers") || "{}");
-    let user = users[username];
-    if (!user) {
-      user = { password, userId: "user_" + Math.random().toString(36).slice(2) };
-      users[username] = user;
-      localStorage.setItem("localUsers", JSON.stringify(users));
-      alert("Uusi käyttäjä luotu (local)!");
-    } else if (user.password !== password) {
-      return alert("Virheellinen salasana");
+    if (!username || !password) return alert("Syötä käyttäjänimi ja salasana.");
+
+    // LOCAL MODE
+    if (isLocal) {
+      let users = JSON.parse(localStorage.getItem("localUsers") || "{}");
+      let user = users[username];
+
+      if (!user) {
+        user = { password, userId: "user_" + Math.random().toString(36).slice(2) };
+        users[username] = user;
+        localStorage.setItem("localUsers", JSON.stringify(users));
+        alert("Uusi käyttäjä luotu (local)!");
+      } else if (user.password !== password) {
+        return alert("Virheellinen salasana");
+      }
+
+      let userData = await loadUserData(user.userId);
+      if (!userData) {
+        userData = { username, scores: [] };
+        await saveUserData(user.userId, userData);
+      }
+
+      alert("Kirjautuminen onnistui (local)!");
+      window.location.href = "Candypaper2.html";
+      return;
     }
 
-    let userData = await loadUserData(user.userId);
-    if (!userData) {
-      userData = { username, scores: [] };
-      await saveUserData(user.userId, userData);
-    }
-
-    alert("Kirjautuminen onnistui (local)!");
-    window.location.href = "Candypaper2.html";
-
-  } else {
-    // ONLINE LOGIN
+    // ONLINE MODE
     const fakeEmail = username + "@mygame.com";
 
     try {
@@ -111,6 +117,7 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
         alert("Virhe: " + err2.message);
       }
     }
-  }
-});
+  });
+}
+
 
