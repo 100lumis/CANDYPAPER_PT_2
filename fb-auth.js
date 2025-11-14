@@ -107,7 +107,7 @@ else {
       }
 
       alert("Kirjautuminen onnistui!");
-      window.location.href = "Candypaper2.html";
+      window.location.href = "index.html";
     } catch (err) {
       // tee uusi käyttäjä
       try {
@@ -118,7 +118,7 @@ else {
         await saveUserData(user.uid, userData);
 
         alert("Uusi käyttäjä luotu ja kirjautunut!");
-        window.location.href = "Candypaper2.html";
+        window.location.href = "index.html";
       } catch (err2) {
         console.error("Login/Register failed:", err2);
         alert("Virhe: " + err2.message);
