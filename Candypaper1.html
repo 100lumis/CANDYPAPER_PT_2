@@ -2,366 +2,108 @@
 <html lang="fi">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Candypaper</title>
+  <link rel="icon" type="image/x-icon" href="favicon.ico">  
   <style>
     body {
-      font-family: Rockwell Extra Bold;
-      color: black;
-      text-align: center;
-      margin: 0;
-      height: 100vh;
-      background-image: url("sweet.png");
+      background-color: #FFFFFF;
+      background-image: url("IMAGES0/makea.png"); 
       background-size: cover;
-      background-position: center;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      padding: 20px 0;
     }
-   h1 {
-  color: #ff1493;
-  font-family: Rockwell Extra Bold;
-  font-weight: 600;
-   font-size: calc(20px + 5vw);
-  opacity: 0.95;
-  text-align: center;
-  letter-spacing: 5px;
-  font-weight: 400;
-  font-style: normal;
-  text-shadow: 0 1px 0 hsl(174, 5%, 80%), 0 2px 0 hsl(174, 5%, 75%),
-    0 3px 0 hsl(174, 5%, 70%), 0 4px 0 hsl(174, 5%, 66%),
-    0 5px 0 hsl(174, 5%, 64%), 0 6px 0 hsl(174, 5%, 62%),
-    0 7px 0 hsl(174, 5%, 61%), 0 8px 0 hsl(174, 5%, 60%),
-    0 0 5px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.2),
-    0 3px 5px rgba(0, 0, 0, 0.2), 0 5px 10px rgba(0, 0, 0, 0.2),
-    0 10px 10px rgba(0, 0, 0, 0.2), 0 20px 20px rgba(0, 0, 0, 0.3);
-}
-    .grid {
-      display: flex;
-      flex-wrap: wrap;
-      height: 550px;
-      width: 560px;
-      background-color: rgba(109, 127, 151, 0.5);
-      padding: 5px;
-      border-radius: 10px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5) inset, 0 1px 0 #fff;
-    }
-    .grid div { height: 65px; width: 70px; }
-    .header { display: flex; flex-direction: column; align-items: center; }
-    h1 { font-size: 2.3rem; }
-  
-    .scoreBoard {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 50px;
-  margin-top: 0px;
-  padding: 15px 25px;
-  background: rgba(255, 255, 255, 0.6);
-  border: 3px solid #d1478e;
-  border-radius: 15px;
-  box-shadow: 0 0 10px rgba(209, 71, 142, 0.3);
-  backdrop-filter: blur(4px);
-}
-.scoreBoard h2 {
-  margin: 0;
-  color: #d1478e;
-  text-shadow: 1px 1px 2px white;
- font-family: Rockwell Extra Bold;
-}
 
-    #leaderboardTable {
+    .fairy {
       position: absolute;
-      top: 250px;
-      left: 5px;
-      width: 300px;
-      background: white;
-      border-collapse: collapse;
-      font-family: Rockwell Extra Bold;
-      border: 2px solid #d1478e;
-      z-index: 1000;
-    }
-    #leaderboardTable th, #leaderboardTable td {
-      padding: 6px;
-      border: 1px solid #d1478e;
-      text-align: center;
-      font-size: 14px;
- font-family: Rockwell Extra Bold;
-    }
-    #leaderboardTable thead { background: #d1478e; color: white; }
-    #leaderboardTable tr.highlight { background-color: #f8d7da; }
-	
-    #leaderboardTitle {
-      display: flex;
-  color: #d1478e;
-  gap: 50px;
-   position: absolute;
-      top: 160px;
-      left: 35px;
-  padding: 15px 25px;
-  background: rgba(255, 255, 255, 0.6);
-  border: 3px solid #d1478e;
-  border-radius: 15px;
-  box-shadow: 0 0 10px rgba(209, 71, 142, 0.3);
-  backdrop-filter: blur(4px);
- font-family: Rockwell Extra Bold;
-}
-.leaderboardTitle h2 {
-  margin: 0;
-  color: #d1478e;
-  text-shadow: 1px 1px 2px white;
- font-family: Rockwell Extra Bold;
-    }
-    #nappi {
-      position: absolute;
-      top: 600px;
-      left: 60px;
-      width: 180px;
-      height: 35px;
-      border: 0;
-      line-height: 2.5;
-      font-size: 1rem;
-      color: white;
-      border-radius: 5px;
-      background-image: linear-gradient(to top right, rgb(255, 20, 147), rgb(255, 105, 180));
+      bottom: 360px;
+      left: 850px;
+      width: 120px;
       cursor: pointer;
     }
-    #nappi:hover { background-color: salmon; }
+
+.basic-box {
+ position: absolute;
+      bottom: 200px;
+      left: 400px;
+	   width: 440px;
+      height: 200px;
+  gap: 50px;
+  background: rgba(255, 255, 255, 0.6);
+  border: 3px solid #d1478e;
+  border-radius: 15px;
+  box-shadow: 0 0 10px rgba(209, 71, 142, 0.3);
+  backdrop-filter: blur(4px);
+}
+
+    /* Puhekupla */
+    .bubble {
+      display: none;
+      position: absolute;
+      bottom: 440px;  
+      left: 950px;   
+      background: #fff;
+      border: 2px solid #333;
+      border-radius: 12px;
+      padding: 10px;
+      white-space: nowrap;
+    }
+
+	.login {
+	
+	position: absolute;
+         bottom: 45px;
+      left: 95px;
+	}
   </style>
 </head>
 <body>
-  <div class="header">
-    <h1>Candypaper</h1>
-    <div class="scoreBoard">
-      <h2>Hanki 150 pistettä!</h2>
-      <h2>Pisteet: <span id="score">0</span></h2>
-      <h2>Liikkeet jäljellä: <span id="moves">40</span></h2>
+  <div class="basic-box">
+    <div class="login">
+      <h2>Kirjaudu</h2>
+      <form id="loginForm">
+        <label for="username">Käyttäjänimi</label>
+        <input type="text" id="username" name="user" required>
+
+        <div class="input-group">
+          <label for="password">Salasana</label>
+          <input type="password" id="password" name="psw" required>
+        </div>
+
+        <button type="submit">Kirjaudu</button>
+      </form>
     </div>
   </div>
 
-  <h2 id="leaderboardTitle">Leaderboard</h2>
-  <table id="leaderboardTable">
-    <thead>
-      <tr>
-        <th>Nimi</th>
-        <th>Pisteet</th>
-        <th>Aika (s)</th>
-      </tr>
-    </thead>
-    <tbody id="leaderboardBody"></tbody>
-  </table>
-  <button id="nappi" onclick="clearLeaderboard()">Tyhjennä leaderboard</button>
+  <div>
+    <img src="IMAGES0/fairy1.png" alt="keiju" class="fairy">
+    <div class="bubble">
+      Tiesitkö sen, että Hershey suklaapatukka on <br>
+      käynyt avaruudessa? <br>
+      Sitä vietiin Apollo 15 mukana kuuhun <br>
+      vuonna 1971.
+    </div>
+  </div>
 
-  <div class="grid"></div>
-
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
-    let playerName = "";
-    let leaderboard = [];
-    let playerEntry = null;
-    let gameStartTime = Date.now();
+    function bounce() {
+      $(".fairy")
+        .animate({ top: "-=20px" }, 800) 
+        .animate({ top: "+=20px" }, 800, bounce); 
+    }
 
-    window.addEventListener("load", () => {
-      playerName = prompt("Anna nimesi:") || "Anonyymi";
-      leaderboard = JSON.parse(localStorage.getItem("candypaperLeaderboard")) || [];
-      leaderboard = leaderboard.filter(e => e.name !== playerName);
-      playerEntry = { name: playerName, score: 0, time: 0 };
-      leaderboard.push(playerEntry);
-      updateLeaderboardUI();
+    $(document).ready(function(){
+      bounce();
+      $(".fairy").on("click", function(){
+        $(".bubble").fadeToggle(300);
+      });
     });
-
-    function updateLeaderboardUI() {
-      const tbody = document.getElementById("leaderboardBody");
-      tbody.innerHTML = "";
-      leaderboard.sort((a,b) => b.score !== a.score ? b.score - a.score : a.time - b.time);
-      leaderboard.forEach(entry => {
-	   if (leaderboard.length > 10) leaderboard = leaderboard.slice(0, 10);
-        const tr = document.createElement("tr");
-        if(entry.name === playerName) tr.classList.add("highlight");
-        tr.innerHTML = `<td>${entry.name}</td><td>${entry.score}</td><td>${entry.time>0?entry.time:'-'}</td>`;
-        tbody.appendChild(tr);
-      });
-      localStorage.setItem("candypaperLeaderboard", JSON.stringify(leaderboard));
-    }
-
-    function clearLeaderboard() {
-      if(confirm("Haluatko varmasti tyhjentää leaderboardin?")) {
-        localStorage.removeItem("candypaperLeaderboard");
-        leaderboard = [];
-        updateLeaderboardUI();
-      }
-    }
-
-    document.addEventListener("DOMContentLoaded", () => candyCrushGame());
-
-    function candyCrushGame() {
-      const grid = document.querySelector(".grid");
-      const scoreDisplay = document.getElementById("score");
-      const width = 8;
-      const squares = [];
-      let score = 0;
-      let movesLeft = 40;
-      const movesDisplay = document.getElementById("moves");
-      let potentialMatch = false;
-
-      const candyColors = [
-        "url(https://raw.githubusercontent.com/arpit456jain/Amazing-Js-Projects/master/Candy%20Crush/utils/red-candy.png)",
-        "url(https://raw.githubusercontent.com/arpit456jain/Amazing-Js-Projects/master/Candy%20Crush/utils/blue-candy.png)",
-        "url(https://raw.githubusercontent.com/arpit456jain/Amazing-Js-Projects/master/Candy%20Crush/utils/green-candy.png)",
-        "url(https://raw.githubusercontent.com/arpit456jain/Amazing-Js-Projects/master/Candy%20Crush/utils/yellow-candy.png)",
-        "url(https://raw.githubusercontent.com/arpit456jain/Amazing-Js-Projects/master/Candy%20Crush/utils/orange-candy.png)",
-        "url(https://raw.githubusercontent.com/arpit456jain/Amazing-Js-Projects/master/Candy%20Crush/utils/purple-candy.png)"
-      ];
-
-      function createBoard() {
-        for(let i=0;i<width*width;i++){
-          const square=document.createElement("div");
-          square.setAttribute("draggable",true);
-          square.setAttribute("id",i);
-          square.style.backgroundImage=candyColors[Math.floor(Math.random()*candyColors.length)];
-          grid.appendChild(square);
-          squares.push(square);
-        }
-      }
-      createBoard();
-
-      let colorBeingDragged, colorBeingReplaced, squareIdBeingDragged, squareIdBeingReplaced;
-
-      squares.forEach(sq=>{
-        sq.addEventListener("dragstart", dragStart);
-        sq.addEventListener("dragend", dragEnd);
-        sq.addEventListener("dragover", e => e.preventDefault());
-        sq.addEventListener("dragenter", e => e.preventDefault());
-        sq.addEventListener("drop", dragDrop);
-      });
-
-      function dragStart(){
-        colorBeingDragged = this.style.backgroundImage;
-        squareIdBeingDragged = parseInt(this.id);
-      }
-
-      function dragDrop(){
-        colorBeingReplaced = this.style.backgroundImage;
-        squareIdBeingReplaced = parseInt(this.id);
-        this.style.backgroundImage = colorBeingDragged;
-        squares[squareIdBeingDragged].style.backgroundImage = colorBeingReplaced;
-      }
-
-      function dragEnd() {
-        let validMoves = [
-          squareIdBeingDragged-1,
-          squareIdBeingDragged-width,
-          squareIdBeingDragged+1,
-          squareIdBeingDragged+width
-        ];
-        let validMove = validMoves.includes(squareIdBeingReplaced);
-
-        if(squareIdBeingReplaced && validMove){
-          if(!isMoveValid()){
-            squares[squareIdBeingReplaced].style.backgroundImage=colorBeingReplaced;
-            squares[squareIdBeingDragged].style.backgroundImage=colorBeingDragged;
-          } else {
-            movesLeft--;
-            movesDisplay.innerHTML = movesLeft;
-            if(score >= 150){
-              alert("Voitit pelin! 🎉");
-              movesLeft = 0;
-            } else if(movesLeft <= 0){
-              alert("Peli loppui! Yritä uudelleen.");
-            }
-          }
-          squareIdBeingReplaced = null;
-        } else if(squareIdBeingReplaced && !validMove){
-          squares[squareIdBeingReplaced].style.backgroundImage=colorBeingReplaced;
-          squares[squareIdBeingDragged].style.backgroundImage=colorBeingDragged;
-        } else{
-          squares[squareIdBeingDragged].style.backgroundImage=colorBeingDragged;
-        }
-      }
-
-      function isMoveValid(){
-        potentialMatch=false;
-        checkRowMatch(true);
-        checkColumnMatch(true);
-        return potentialMatch;
-      }
-
-      function moveIntoSquareBelow(){
-        for(let i=0;i<55;i++){
-          if(squares[i+width].style.backgroundImage===""){
-            squares[i+width].style.backgroundImage=squares[i].style.backgroundImage;
-            squares[i].style.backgroundImage="";
-            const firstRow=[0,1,2,3,4,5,6,7];
-            if(firstRow.includes(i) && squares[i].style.backgroundImage===""){
-              squares[i].style.backgroundImage=candyColors[Math.floor(Math.random()*candyColors.length)];
-            }
-          }
-        }
-      }
-
-      function checkRowMatch(testOnly=false){
-        for(let i=0;i<64;i++){
-          let decidedColor=squares[i].style.backgroundImage;
-          if(!decidedColor) continue;
-          let matchCount=1;
-          let rowStart=Math.floor(i/width)*width;
-          for(let j=i+1;j<rowStart+width;j++){
-            if(squares[j].style.backgroundImage===decidedColor) matchCount++;
-            else break;
-          }
-          if(matchCount>=3){
-            if(testOnly) potentialMatch=true;
-            else {
-              for(let k=0;k<matchCount;k++) squares[i+k].style.backgroundImage="";
-              score+=matchCount;
-              updateScore();
-            }
-            i+=matchCount-1;
-          }
-        }
-      }
-
-      function checkColumnMatch(testOnly=false){
-        for(let i=0;i<64;i++){
-          let decidedColor=squares[i].style.backgroundImage;
-          if(!decidedColor) continue;
-          let matchCount=1;
-          for(let j=i+width;j<64;j+=width){
-            if(squares[j].style.backgroundImage===decidedColor) matchCount++;
-            else break;
-          }
-          if(matchCount>=3){
-            if(testOnly) potentialMatch=true;
-            else {
-              for(let k=0;k<matchCount;k++) squares[i+k*width].style.backgroundImage="";
-              score+=matchCount;
-              updateScore();
-            }
-          }
-        }
-      }
-
-      function updateScore(){
-        playerEntry.score = score;
-        playerEntry.time = Math.floor((Date.now()-gameStartTime)/1000);
-        leaderboard = leaderboard.filter(e => e.name!==playerName);
-        leaderboard.push(playerEntry);
-        updateLeaderboardUI();
-        scoreDisplay.innerHTML = score;
-
-        if(score >= 150 && movesLeft > 0){
-          alert("Voitit pelin! 🎉");
-          movesLeft = 0;
-        }
-      }
-
-      window.setInterval(()=>{
-        moveIntoSquareBelow();
-        checkRowMatch();
-        checkColumnMatch();
-      },100);
-    }
   </script>
+
+  <!-- Firebase compat scripts -->
+  <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore-compat.js"></script>
+
+  <!-- Load fb-auth.js directly; it will detect environment itself -->
+  <script src="fb-auth.js"></script>
 </body>
 </html>
