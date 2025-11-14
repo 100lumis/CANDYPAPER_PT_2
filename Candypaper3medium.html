@@ -5,129 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Candy Crush Leaderboard Edition</title>
   <style>
-    body {
-      font-family: Rockwell Extra Bold;
-      color: black;
-      text-align: center;
-      margin: 0;
-      height: 100vh;
-      background-image: url("sweet.png");
-      background-size: cover;
-      background-position: center;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      padding: 20px 0;
-    }
-    h1 {
-  color: #ff1493;
-  font-family: Rockwell Extra Bold;
-  font-weight: 600;
-   font-size: calc(20px + 5vw);
-  opacity: 0.95;
-  text-align: center;
-  letter-spacing: 5px;
-  font-weight: 400;
-  font-style: normal;
-  text-shadow: 0 1px 0 hsl(174, 5%, 80%), 0 2px 0 hsl(174, 5%, 75%),
-    0 3px 0 hsl(174, 5%, 70%), 0 4px 0 hsl(174, 5%, 66%),
-    0 5px 0 hsl(174, 5%, 64%), 0 6px 0 hsl(174, 5%, 62%),
-    0 7px 0 hsl(174, 5%, 61%), 0 8px 0 hsl(174, 5%, 60%),
-    0 0 5px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.2),
-    0 3px 5px rgba(0, 0, 0, 0.2), 0 5px 10px rgba(0, 0, 0, 0.2),
-    0 10px 10px rgba(0, 0, 0, 0.2), 0 20px 20px rgba(0, 0, 0, 0.3);
-}
-    .grid {
-      display: flex;
-      flex-wrap: wrap;
-      height: 550px;
-      width: 560px;
-      background-color: rgba(109, 127, 151, 0.5);
-      padding: 5px;
-      border-radius: 10px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5) inset, 0 1px 0 #fff;
-    }
-    .grid div { height: 65px; width: 70px; }
-    .header { display: flex; flex-direction: column; align-items: center; }
-    h1 { font-size: 2.3rem; }
-    .scoreBoard {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 50px;
-  margin-top: 0px;
-  padding: 15px 25px;
-  background: rgba(255, 255, 255, 0.6);
-  border: 3px solid #d1478e;
-  border-radius: 15px;
-  box-shadow: 0 0 10px rgba(209, 71, 142, 0.3);
-  backdrop-filter: blur(4px);
-}
-.scoreBoard h2 {
-  margin: 0;
-  color: #d1478e;
-  text-shadow: 1px 1px 2px white;
- font-family: Rockwell Extra Bold;
-}
-
-    #leaderboardTable {
-      position: absolute;
-      top: 250px;
-      left: 5px;
-      width: 300px;
-      background: white;
-      border-collapse: collapse;
-      font-family: Rockwell Extra Bold;
-      border: 2px solid #d1478e;
-      z-index: 1000;
-    }
-    #leaderboardTable th, #leaderboardTable td {
-      padding: 6px;
-      border: 1px solid #d1478e;
-      text-align: center;
-      font-size: 14px;
- font-family: Rockwell Extra Bold;
-    }
-    #leaderboardTable thead { background: #d1478e; color: white; }
-    #leaderboardTable tr.highlight { background-color: #f8d7da; }
-	
-    #leaderboardTitle {
-      display: flex;
-  color: #d1478e;
-  gap: 50px;
-   position: absolute;
-      top: 160px;
-      left: 35px;
-  padding: 15px 25px;
-  background: rgba(255, 255, 255, 0.6);
-  border: 3px solid #d1478e;
-  border-radius: 15px;
-  box-shadow: 0 0 10px rgba(209, 71, 142, 0.3);
-  backdrop-filter: blur(4px);
- font-family: Rockwell Extra Bold;
-}
-.leaderboardTitle h2 {
-  margin: 0;
-  color: #d1478e;
-  text-shadow: 1px 1px 2px white;
- font-family: Rockwell Extra Bold;
-    }
-    #nappi {
-      position: absolute;
-      top: 600px;
-      left: 60px;
-      width: 180px;
-      height: 35px;
-      border: 0;
-      line-height: 2.5;
-      font-size: 1rem;
-      color: white;
-      border-radius: 5px;
-      background-image: linear-gradient(to top right, rgb(255, 20, 147), rgb(255, 105, 180));
-      cursor: pointer;
-    }
-    #nappi:hover { background-color: salmon; }
+    /* ... your existing CSS unchanged ... */
   </style>
 </head>
 <body>
@@ -155,6 +33,14 @@
 
   <div class="grid"></div>
 
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js"></script>
+
+  <!-- Your utility to save high scores -->
+  <script src="score-utils.js"></script>
+
   <script>
     let playerName = "";
     let leaderboard = [];
@@ -175,7 +61,7 @@
       tbody.innerHTML = "";
       leaderboard.sort((a,b) => b.score !== a.score ? b.score - a.score : a.time - b.time);
       leaderboard.forEach(entry => {
-	   if (leaderboard.length > 10) leaderboard = leaderboard.slice(0, 10);
+        if(leaderboard.length > 10) leaderboard = leaderboard.slice(0, 10);
         const tr = document.createElement("tr");
         if(entry.name === playerName) tr.classList.add("highlight");
         tr.innerHTML = `<td>${entry.name}</td><td>${entry.score}</td><td>${entry.time>0?entry.time:'-'}</td>`;
@@ -263,9 +149,11 @@
           } else {
             movesLeft--;
             movesDisplay.innerHTML = movesLeft;
-            if(score >= 200){
+            if(score >= 200 && movesLeft > 0){
               alert("Voitit pelin! 🎉");
               movesLeft = 0;
+              // save high score to Firebase
+              saveHighScore(score).then(() => console.log("Score saved!"));
             } else if(movesLeft <= 0){
               alert("Peli loppui! Yritä uudelleen.");
             }
@@ -352,6 +240,9 @@
         if(score >= 200 && movesLeft > 0){
           alert("Voitit pelin! 🎉");
           movesLeft = 0;
+
+          // Save to Firebase high score
+          saveHighScore(score).then(() => console.log("Score saved!"));
         }
       }
 
