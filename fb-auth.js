@@ -1,7 +1,6 @@
-// Check if running locally
+
 const isLocal = window.location.protocol === "file:";
 
-// --- Firebase setup (only for online) ---
 let auth, db;
 
 if (!isLocal) {
@@ -20,7 +19,7 @@ if (!isLocal) {
   db = firebase.firestore();
 }
 
-// --- Functions for saving/loading user data ---
+// save n load
 async function saveUserData(userId, data) {
   localStorage.setItem("playerData_" + userId, JSON.stringify(data));
 
@@ -97,7 +96,6 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
       window.location.href = "index.html";
 
     } catch (err) {
-      // Create new user if login fails
       try {
         const userCredential = await auth.createUserWithEmailAndPassword(fakeEmail, password);
         const user = userCredential.user;
