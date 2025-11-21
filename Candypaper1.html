@@ -57,12 +57,34 @@
   </form>
 </div>
 
+  
 <!-- Firebase scripts -->
 <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore-compat.js"></script>
 
 <script>
+<div>
+    <img src="fairy1.png" alt="keiju" class="fairy">
+     <div class="bubble">Tiesitkö sen, että Hershey suklaapatukka on <br>käynnyt avaruudessa? <br>Sitä vietiin Apollo 15 mukana kuuhun <br>vuonna 1971.</div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    function bounce() {
+      $(".fairy")
+        .animate({ top: "-=20px" }, 800) 
+        .animate({ top: "+=20px" }, 800, bounce); 
+    }
+
+    $(document).ready(function(){
+      bounce();
+      $(".fairy").on("click", function(){
+        $(".bubble").fadeToggle(300);
+      });
+    });
+
+  
 // --- Firebase config ---
 const firebaseConfig = {
   apiKey: "AIzaSyBH9Eb9mRWeSx4ySuyasPf0cQ0I0JZdm2s",
