@@ -2,7 +2,6 @@
 <html lang="fi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Candypaper Login</title>
 <link rel="icon" type="image/x-icon" href="favicon.ico">
 <style>
@@ -11,7 +10,11 @@
     background-image: url("IMAGES0/makea.png");
     background-size: cover;
     font-family: Arial, sans-serif;
+    margin: 0;
+    overflow-x: hidden;
+    height: 100vh;
   }
+
   .login-box {
     position: absolute;
     bottom: 100px;
@@ -24,7 +27,9 @@
     border-radius: 15px;
     box-shadow: 0 0 10px rgba(209,71,142,0.3);
   }
+
   .login-box h2 { text-align:center; color:#d1478e; }
+
   .login-box input {
     display: block;
     width: 90%;
@@ -32,6 +37,7 @@
     padding: 8px;
     font-size: 1rem;
   }
+
   .login-box button {
     display: block;
     width: 94%;
@@ -44,20 +50,23 @@
     border-radius:5px;
     cursor:pointer;
   }
+
   .login-box button:hover { background-color: salmon; }
 
-  .fairy-container {
+  /* Fairy and bubble */
+  .fairy {
     position: absolute;
-    bottom: 360px;
+    bottom: 300px;
     left: 850px;
-    width: 120px;
+    width: 60px; /* smaller size */
     cursor: pointer;
   }
+
   .bubble {
     display: none;
     position: absolute;
-    bottom: 440px;
-    left: 950px;
+    bottom: 380px;
+    left: 900px;
     background: #fff;
     border: 2px solid #333;
     border-radius: 12px;
@@ -77,92 +86,79 @@
   </form>
 </div>
 
-<!-- Fairy and bubble -->
-<div class="fairy-container">
-  <img src="IMAGES0/fairy1.png" alt="keiju" class="fairy">
-  <div class="bubble">
-    Tiesitkö sen, että Hershey suklaapatukka on <br>
-    käynyt avaruudessa? <br>
-    Sitä vietiin Apollo 15 mukana kuuhun <br>
-    vuonna 1971.
-  </div>
+<img src="IMAGES0/fairy1.png" alt="keiju" class="fairy">
+<div class="bubble">
+  Tiesitkö sen, että Hershey suklaapatukka on <br>
+  käynyt avaruudessa? <br>
+  Sitä vietiin Apollo 15 mukana kuuhun <br>
+  vuonna 1971.
 </div>
-
-<!-- jQuery -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <!-- Firebase scripts -->
 <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore-compat.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
-  // Fairy bounce animation
-  function bounce() {
-    $(".fairy")
-      .animate({ top: "-=20px" }, 800)
-      .animate({ top: "+=20px" }, 800, bounce);
-  }
-  $(document).ready(function(){
-    bounce();
-    $(".fairy").on("click", function(){
-      $(".bubble").fadeToggle(300);
-    });
+// Bouncing fairy
+function bounce() {
+  $(".fairy")
+    .animate({ bottom: "+=20px" }, 800)
+    .animate({ bottom: "-=20px" }, 800, bounce);
+}
+
+$(document).ready(function(){
+  bounce();
+  $(".fairy").on("click", function(){
+    $(".bubble").fadeToggle(300);
   });
+});
 
-  // --- Firebase config ---
-  const firebaseConfig = {
-    apiKey: "AIzaSyBH9Eb9mRWeSx4ySuyasPf0cQ0I0JZdm2s",
-    authDomain: "candypaperdb-69758.firebaseapp.com",
-    projectId: "candypaperdb-69758",
-    storageBucket: "candypaperdb-69758.appspot.com",
-    messagingSenderId: "805331025403",
-    appId: "1:805331025403:web:6bf883ad174a1886f49f5e"
-  };
+// --- Firebase config ---
+const firebaseConfig = {
+  apiKey: "AIzaSyBH9Eb9mRWeSx4ySuyasPf0cQ0I0JZdm2s",
+  authDomain: "candypaperdb-69758.firebaseapp.com",
+  projectId: "candypaperdb-69758",
+  storageBucket: "candypaperdb-69758.appspot.com",
+  messagingSenderId: "805331025403",
+  appId: "1:805331025403:web:6bf883ad174a1886f49f5e"
+};
 
-  firebase.initializeApp(firebaseConfig);
-  const auth = firebase.auth();
-  const db = firebase.firestore();
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
 
-  // --- Login form handler ---
-  document.getElementById("loginForm").addEventListener("submit", async e => {
-    e.preventDefault();
-    const username = document.getElementById("username").value.trim();
-    const password = document.getElementById("password").value.trim();
+// --- Login form handler ---
+document.getElementById("loginForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  const username = document.getElementById("username").value.trim();
+  const password = document.getElementById("password").value.trim();
+  if(!username || !password) return alert("Syötä käyttäjänimi ja salasana.");
 
-    if(!username || !password) return alert("Syötä käyttäjänimi ja salasana.");
+  const fakeEmail = username + "@mygame.com";
 
-    const fakeEmail = username + "@mygame.com";
-
+  try {
+    let userCredential;
     try {
-      // Try signing in first
-      let userCredential;
-      try {
-        userCredential = await auth.signInWithEmailAndPassword(fakeEmail, password);
-      } catch(err) {
-        if(err.code === "auth/user-not-found") {
-          userCredential = await auth.createUserWithEmailAndPassword(fakeEmail, password);
-          console.log("New user created");
-        } else {
-          throw err;
-        }
-      }
-
-      const user = userCredential.user;
-
-      // Set displayName if not set
-      if(!user.displayName) {
-        await user.updateProfile({ displayName: username });
-      }
-
-      alert("Kirjautuminen onnistui!");
-      window.location.href = "Candypaper3.html";
-
+      userCredential = await auth.signInWithEmailAndPassword(fakeEmail, password);
     } catch(err) {
-      console.error(err);
-      alert("Kirjautuminen epäonnistui: " + err.message);
+      if(err.code === "auth/user-not-found") {
+        userCredential = await auth.createUserWithEmailAndPassword(fakeEmail, password);
+        console.log("New user created");
+      } else throw err;
     }
-  });
+
+    const user = userCredential.user;
+    if(!user.displayName) await user.updateProfile({ displayName: username });
+
+    alert("Kirjautuminen onnistui!");
+    window.location.href = "Candypaper3.html";
+  } catch(err) {
+    console.error(err);
+    alert("Kirjautuminen epäonnistui: " + err.message);
+  }
+});
 </script>
 
 </body>
