@@ -1,109 +1,125 @@
 <!DOCTYPE html>
 <html lang="fi">
 <head>
-  <meta charset="UTF-8">
-  <title>Candypaper</title>
-  <link rel="icon" type="image/x-icon" href="favicon.ico">  
-  <style>
-    body {
-      background-color: #FFFFFF;
-      background-image: url("IMAGES0/makea.png"); 
-      background-size: cover;
-    }
-
-    .fairy {
-      position: absolute;
-      bottom: 360px;
-      left: 850px;
-      width: 120px;
-      cursor: pointer;
-    }
-
-.basic-box {
- position: absolute;
-      bottom: 200px;
-      left: 400px;
-	   width: 440px;
-      height: 200px;
-  gap: 50px;
-  background: rgba(255, 255, 255, 0.6);
-  border: 3px solid #d1478e;
-  border-radius: 15px;
-  box-shadow: 0 0 10px rgba(209, 71, 142, 0.3);
-  backdrop-filter: blur(4px);
-}
-
-    /* Puhekupla */
-    .bubble {
-      display: none;
-      position: absolute;
-      bottom: 440px;  
-      left: 950px;   
-      background: #fff;
-      border: 2px solid #333;
-      border-radius: 12px;
-      padding: 10px;
-      white-space: nowrap;
-    }
-
-	.login {
-	
-	position: absolute;
-         bottom: 45px;
-      left: 95px;
-	}
-  </style>
+<meta charset="UTF-8">
+<title>Candypaper Login</title>
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<style>
+  body {
+    background-color: #FFFFFF;
+    background-image: url("IMAGES0/makea.png");
+    background-size: cover;
+    font-family: Arial, sans-serif;
+  }
+  .login-box {
+    position: absolute;
+    bottom: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 400px;
+    padding: 20px;
+    background: rgba(255,255,255,0.8);
+    border: 3px solid #d1478e;
+    border-radius: 15px;
+    box-shadow: 0 0 10px rgba(209,71,142,0.3);
+  }
+  .login-box h2 { text-align:center; color:#d1478e; }
+  .login-box input {
+    display: block;
+    width: 90%;
+    margin: 10px auto;
+    padding: 8px;
+    font-size: 1rem;
+  }
+  .login-box button {
+    display: block;
+    width: 94%;
+    margin: 10px auto;
+    padding: 10px;
+    font-size: 1rem;
+    background: linear-gradient(to top right, rgb(255,20,147), rgb(255,105,180));
+    color:white;
+    border: none;
+    border-radius:5px;
+    cursor:pointer;
+  }
+  .login-box button:hover { background-color: salmon; }
+</style>
 </head>
 <body>
-  <div class="basic-box">
-    <div class="login">
-      <h2>Kirjaudu</h2>
-      <form id="loginForm">
-        <label for="username">Käyttäjänimi</label>
-        <input type="text" id="username" name="user" required>
 
-        <div class="input-group">
-          <label for="password">Salasana</label>
-          <input type="password" id="password" name="psw" required>
-        </div>
+<div class="login-box">
+  <h2>Kirjaudu Candypaperiin</h2>
+  <form id="loginForm">
+    <input type="text" id="username" placeholder="Käyttäjänimi" required>
+    <input type="password" id="password" placeholder="Salasana" required>
+    <button type="submit">Kirjaudu / Rekisteröidy</button>
+  </form>
+</div>
 
-        <button type="submit">Kirjaudu</button>
-      </form>
-    </div>
-  </div>
+<!-- Firebase scripts -->
+<script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore-compat.js"></script>
 
-  <div>
-    <img src="IMAGES0/fairy1.png" alt="keiju" class="fairy">
-    <div class="bubble">
-      Tiesitkö sen, että Hershey suklaapatukka on <br>
-      käynyt avaruudessa? <br>
-      Sitä vietiin Apollo 15 mukana kuuhun <br>
-      vuonna 1971.
-    </div>
-  </div>
+<script>
+// --- Firebase config ---
+const firebaseConfig = {
+  apiKey: "AIzaSyBH9Eb9mRWeSx4ySuyasPf0cQ0I0JZdm2s",
+  authDomain: "candypaperdb-69758.firebaseapp.com",
+  projectId: "candypaperdb-69758",
+  storageBucket: "candypaperdb-69758.appspot.com",
+  messagingSenderId: "805331025403",
+  appId: "1:805331025403:web:6bf883ad174a1886f49f5e"
+};
 
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script>
-    function bounce() {
-      $(".fairy")
-        .animate({ top: "-=20px" }, 800) 
-        .animate({ top: "+=20px" }, 800, bounce); 
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+// --- Login form handler ---
+document.getElementById("loginForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  const username = document.getElementById("username").value.trim();
+  const password = document.getElementById("password").value.trim();
+
+  if(!username || !password) return alert("Syötä käyttäjänimi ja salasana.");
+
+  // Create a fake email for Firebase
+  const fakeEmail = username + "@mygame.com";
+
+  try {
+    // Try signing in first
+    let userCredential;
+    try {
+      userCredential = await auth.signInWithEmailAndPassword(fakeEmail, password);
+    } catch(err) {
+      // If user doesn't exist, create account
+      if(err.code === "auth/user-not-found") {
+        userCredential = await auth.createUserWithEmailAndPassword(fakeEmail, password);
+        console.log("New user created");
+      } else {
+        throw err;
+      }
     }
 
-    $(document).ready(function(){
-      bounce();
-      $(".fairy").on("click", function(){
-        $(".bubble").fadeToggle(300);
-      });
-    });
-  </script>
+    const user = userCredential.user;
 
-  <!-- Firebase compat scripts -->
-  <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore-compat.js"></script>
+    // Set displayName if not already set
+    if(!user.displayName) {
+      await user.updateProfile({ displayName: username });
+    }
 
-  <!-- Load fb-auth.js directly; it will detect environment itself -->
-  <script src="fb-auth.js"></script>
+    alert("Kirjautuminen onnistui!");
+    // Redirect only after auth is ready
+    window.location.href = "Candypaper3.html";
+
+  } catch(err) {
+    console.error(err);
+    alert("Kirjautuminen epäonnistui: " + err.message);
+  }
+});
+</script>
+
 </body>
 </html>
