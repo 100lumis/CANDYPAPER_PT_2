@@ -1,10 +1,10 @@
-// Detect local offline mode
+// Detect local/offline mode
 const isLocal = window.location.protocol === "file:";
 
 let auth = null;
 let db = null;
 
-// Only load Firebase when not local
+// Only initialize Firebase if not local
 if (!isLocal) {
   const firebaseConfig = {
     apiKey: "AIzaSyBH9Eb9mRWeSx4ySuyasPf0cQ0I0JZdm2s",
@@ -20,7 +20,7 @@ if (!isLocal) {
   db = firebase.firestore();
 }
 
-// ------- SAVE & LOAD (shared for all pages) -------
+// ----- Shared SAVE & LOAD for all pages -----
 async function saveUserData(userId, data) {
   localStorage.setItem("playerData_" + userId, JSON.stringify(data));
 
@@ -35,7 +35,6 @@ async function saveUserData(userId, data) {
 
 async function loadUserData(userId) {
   const localBackup = localStorage.getItem("playerData_" + userId);
-
   if (isLocal || !db) return localBackup ? JSON.parse(localBackup) : null;
 
   try {
@@ -48,7 +47,7 @@ async function loadUserData(userId) {
   return localBackup ? JSON.parse(localBackup) : null;
 }
 
-// ------- LOGIN FORM HANDLER (only runs on login page) -------
+// ----- LOGIN FORM HANDLER -----
 const loginForm = document.getElementById("loginForm");
 
 if (loginForm) {
@@ -60,7 +59,7 @@ if (loginForm) {
 
     if (!username || !password) return alert("Syötä käyttäjänimi ja salasana.");
 
-    // LOCAL MODE
+    // ----- LOCAL MODE -----
     if (isLocal) {
       let users = JSON.parse(localStorage.getItem("localUsers") || "{}");
       let user = users[username];
@@ -81,16 +80,22 @@ if (loginForm) {
       }
 
       alert("Kirjautuminen onnistui (local)!");
-      window.location.href = "Candypaper2.html";
+      window.location.href = "Candypaper3.html";
       return;
     }
 
-    // ONLINE MODE
+    // ----- ONLINE MODE -----
     const fakeEmail = username + "@mygame.com";
 
     try {
+      // Try sign in
       const userCredential = await auth.signInWithEmailAndPassword(fakeEmail, password);
       const user = userCredential.user;
+
+      // Ensure displayName is set for game
+      if (!user.displayName) {
+        await user.updateProfile({ displayName: username });
+      }
 
       let userData = await loadUserData(user.uid);
       if (!userData) {
@@ -99,18 +104,21 @@ if (loginForm) {
       }
 
       alert("Kirjautuminen onnistui!");
-      window.location.href = "index.html";
+      window.location.href = "Candypaper3.html";
 
     } catch (err) {
+      // If sign in fails, create new account
       try {
         const userCredential = await auth.createUserWithEmailAndPassword(fakeEmail, password);
         const user = userCredential.user;
+
+        await user.updateProfile({ displayName: username });
 
         const userData = { username, scores: [] };
         await saveUserData(user.uid, userData);
 
         alert("Uusi käyttäjä luotu ja kirjautunut!");
-        window.location.href = "index.html";
+        window.location.href = "Candypaper3.html";
 
       } catch (err2) {
         console.error("Login/Register failed:", err2);
@@ -119,5 +127,4 @@ if (loginForm) {
     }
   });
 }
-
 
